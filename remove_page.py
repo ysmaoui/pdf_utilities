@@ -3,11 +3,14 @@ import argparse
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import logging
 
-logging.basicConfig(format='[%(levelname)s:%(asctime)s]: %(message)s', datefmt='%d/%m/%Y %H:%M:%S',level=logging.DEBUG)
+logging.basicConfig(format='[%(levelname)s:%(asctime)s]: %(message)s',
+                    datefmt='%d/%m/%Y %H:%M:%S', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
 
 class cd:
     """Context manager for changing the current working directory"""
+
     def __init__(self, newPath):
         self.newPath = os.path.expanduser(newPath)
 
@@ -18,14 +21,18 @@ class cd:
     def __exit__(self, etype, value, traceback):
         os.chdir(self.savedPath)
 
-def parsingArguments() :
-    parser = argparse.ArgumentParser(description='Merge all pdf files in dir that does not end with "merged" into one output file')
-    
+
+def parsingArguments():
+    parser = argparse.ArgumentParser(
+        description='Merge all pdf files in dir that does not end with "merged" into one output file')
+
     parser.add_argument('dir', help='working directory')
     parser.add_argument('input', help='input pdf file to edit')
-    parser.add_argument('output', help='output file name. It is created in the same directory as the input files')
+    parser.add_argument('output', help='output file name.\
+                         It is created in the same directory as the input files')
     parser.add_argument('--remove_pages', nargs='+', type=int)
-    return  parser.parse_args()
+    return parser.parse_args()
+
 
 def main():
     args = parsingArguments()
@@ -36,18 +43,16 @@ def main():
 
     with cd(args.dir):
         output = PdfFileWriter()
-        input = PdfFileReader(open(input_fileName,"rb"))
+        input = PdfFileReader(open(input_fileName, "rb"))
 
         logger.info(input_fileName + " has %d pages", input.getNumPages())
-        logger.info( 'removing pages: %s', pagesToRemove)
+        logger.info('removing pages: %s', pagesToRemove)
 
         for pageNumber in range(input.getNumPages()):
             if pageNumber not in pagesToRemove_startindex_0:
                 output.addPage(input.getPage(pageNumber))
-        outputStream = file(output_fileName, "wb")
+        outputStream = open(output_fileName, "wb")
         output.write(outputStream)
-
-
 
 
 main()
