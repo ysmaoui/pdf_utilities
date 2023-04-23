@@ -1,6 +1,6 @@
 import os
 import argparse
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfWriter, PdfReader
 import logging
 
 logging.basicConfig(format='[%(levelname)s:%(asctime)s]: %(message)s',
@@ -44,15 +44,15 @@ def main():
     pagesToExtract_startindex_0 = [x - 1 for x in pagesToExtract]
 
     with cd(args.dir):
-        output = PdfFileWriter()
-        input = PdfFileReader(open(input_fileName, "rb"))
+        output = PdfWriter()
+        input = PdfReader(open(input_fileName, "rb"))
 
-        logger.info(input_fileName + " has %d pages", input.getNumPages())
+        logger.info(input_fileName + " has %d pages", len(input.pages))
         logger.info('extracting pages: %s', pagesToExtract)
 
-        for pageNumber in range(input.getNumPages()):
+        for pageNumber in range(len(input.pages)):
             if pageNumber in pagesToExtract_startindex_0:
-                output.addPage(input.getPage(pageNumber))
+                output.add_page(input.pages[pageNumber])
         outputStream = open(output_fileName, "wb")
         output.write(outputStream)
 

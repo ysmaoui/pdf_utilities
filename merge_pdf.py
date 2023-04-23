@@ -1,6 +1,6 @@
 import os
 import argparse
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
 import logging
 
 logging.basicConfig(format='[%(levelname)s:%(asctime)s]: %(message)s',
@@ -43,7 +43,7 @@ def getListOfFilesToMerge():
 
 
 def mergeFiles(filesToMerge, output):
-    merger = PdfFileMerger()
+    merger = PdfMerger()
     for file in filesToMerge:
         logger.info('[INFO] merging file: ' + file)
         input = open(file, "rb")
